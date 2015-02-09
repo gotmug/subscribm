@@ -2,6 +2,8 @@ EXCLUDED_SUBDOMAINS = %w(admin)
 
 module Subscribm
   class Account < ActiveRecord::Base
+	has_many :members, :class_name => "Subscribm::Member"
+	has_many :users, :through => :members
 	validates_exclusion_of :subdomain, :in => EXCLUDED_SUBDOMAINS,
 		:message => "is not allowed. Please choose another subdomain."
 	validates_format_of :subdomain, :with => /\A[\w\-]+\Z/i,
@@ -14,5 +16,12 @@ module Subscribm
 		self.subdomain = subdomain.to_s.downcase
 	end
 	
+	def self.create_with_owner(params={})
+		account = new(params)
+		if account.save
+			account.users << account.owner
+		end
+		account
+	end
   end
 end
