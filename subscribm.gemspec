@@ -26,5 +26,6 @@ Gem::Specification.new do |s|
   s.add_dependency "bcrypt",  "3.1.7"
   s.add_dependency "warden", "1.2.3"
   s.add_dependency "dynamic_form", "1.1.4"
+  s.add_dependency "factory_girl", "4.4.0"
   
 end

@@ -1,4 +1,15 @@
+require "subscribm/constraints/subdomain_required"
+
 Subscribm::Engine.routes.draw do
+
+	constraints(Subscribm::Constraints::SubdomainRequired) do
+		scope :module => "account" do
+			root :to => "dashboard#index", :as => :account_root
+			get "/sign_in", :to => "sessions#new"
+			post "/sign_in", :to => "sessions#create", :as => :sessions
+		end
+	end
+	
 	root "dashboard#index"
 	
 	get "/sign_up", :to => "accounts#new", :as => :sign_up

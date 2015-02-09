@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
 
-  mount Subscribm::Engine => "/subscribm"
+  mount Subscribm::Engine => "/"
 end
