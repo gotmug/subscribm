@@ -9,11 +9,10 @@ module Subscribm
 	end
 	
 	def create
-		@account = Subscribm::Account.new(account_params)
+		@account = Subscribm::Account.create_with_owner(account_params)
 		
-		if @account.save
-			env["warden"].set_user(@account.owner, :scope => :user)
-			env["warden"].set_user(@account, :scope => :account)
+		if @account.valid?
+			force_authentication!(@account, @account.owner)
 			flash[:success] = "Your account has been successfully created."
 			redirect_to subscribm.root_url(:subdomain => @account.subdomain)
 		else

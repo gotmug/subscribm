@@ -36,7 +36,10 @@ module Subscribm
 	
 	helper_method :user_signed_in?
 	
-	
+	def force_authentication!(account, user)
+		env["warden"].set_user(user, :scope => :user)
+		env["warden"].set_user(account, :scope => :account)
+	end
 	
 	
   end
