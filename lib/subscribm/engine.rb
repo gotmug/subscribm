@@ -1,5 +1,6 @@
 require "warden"
 require "dynamic_form"
+require "apartment"
 
 module Subscribm
   class Engine < ::Rails::Engine
