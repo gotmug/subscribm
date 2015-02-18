@@ -7,12 +7,7 @@
 	end
   
 	def current_account
-		if user_signed_in?
-			@current_account ||= begin
-				account_id = env["warden"].user(:scope => :account)
-				Subscribm::Account.find(account_id)
-			end
-		end
+		@current_account ||= Subscribm::Account.find_by!(subdomain: request.subdomain)
 	end
 	
 	helper_method :current_account
@@ -34,8 +29,7 @@
 	
 	helper_method :user_signed_in?
 	
-	def force_authentication!(account, user)
+	def force_authentication!(user)
 		env["warden"].set_user(user, :scope => :user)
-		env["warden"].set_user(account, :scope => :account)
 	end
 end

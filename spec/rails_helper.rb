@@ -5,6 +5,7 @@ require File.expand_path("../dummy/config/environment", __FILE__)
 require 'rspec/rails'
 require "capybara/rspec"
 require "factory_girl"
+require "database_cleaner"
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -24,11 +25,7 @@ RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
-  # If you're not using ActiveRecord, or you'd prefer not to run each of your
-  # examples within a transaction, remove the following line or assign false
-  # instead of true.
-  config.use_transactional_fixtures = true
-
+  
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
   # `post` in specs under `spec/controllers`.
@@ -43,4 +40,29 @@ RSpec.configure do |config|
   # The different available types are documented in the features, such as in
   # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_spec_type_from_file_location!
+  config.before(:all) do
+	DatabaseCleaner.strategy = :truncation,
+		{ :pre_count => true, :reset_ids => true }
+	DatabaseCleaner.clean_with(:truncation)
+  end
+  config.before(:each) do
+	DatabaseCleaner.start
+  end
+  config.after(:each) do
+	Apartment::Tenant.reset
+	DatabaseCleaner.clean
+	connection = ActiveRecord::Base.connection.raw_connection
+	schemas = connection.query(%Q{
+		SELECT 'drop schema ' || nspname || ' cascade;'
+		from pg_namespace
+		where nspname != 'public'
+		AND nspname NOT LIKE 'pg_%'
+		AND nspname != 'information_schema';
+	})
+	schemas.each do |query|
+		connection.query(query.values.first)
+	end
+  end
+  
+  Capybara.app_host = "http://example.com"
 end
