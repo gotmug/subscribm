@@ -1,7 +1,6 @@
 require "warden"
+require "houser"
 require "dynamic_form"
-require "apartment"
-require "apartment/elevators/subdomain"
 
 module Subscribm
   class Engine < ::Rails::Engine
@@ -23,9 +22,12 @@ module Subscribm
 		end
 	end
 	
-	initializer "subscribm.middleware.apartment" do
-		Rails.application.config.middleware.use Apartment::Elevators::Subdomain
+	initializer "subscribm.middlware.houser" do
+		Rails.application.config.middleware.use Houser::Middleware,
+			:class_name => "Subscribm::Account"
 	end
+	
+	
 	
 	config.to_prepare do
 		root = Subscribm::Engine.root

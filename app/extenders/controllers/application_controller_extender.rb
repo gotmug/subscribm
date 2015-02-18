@@ -7,7 +7,7 @@
 	end
   
 	def current_account
-		@current_account ||= Subscribm::Account.find_by!(subdomain: request.subdomain)
+		@current_account ||= env["X-Houser-Object"]
 	end
 	
 	helper_method :current_account

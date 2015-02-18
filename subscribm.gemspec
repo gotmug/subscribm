@@ -29,6 +29,6 @@ Gem::Specification.new do |s|
   s.add_dependency "dynamic_form", "1.1.4"
   s.add_dependency "factory_girl", "4.4.0"
   s.add_dependency "pg"
-  s.add_dependency "apartment"
+  s.add_dependency "houser", "1.0.2"
   
 end
