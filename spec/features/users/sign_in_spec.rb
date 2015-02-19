@@ -1,6 +1,9 @@
 require "rails_helper"
+require "subscribm/testing_support/subdomain_helpers"
+require "subscribm/testing_support/factories/account_factory"
+
 feature "User sign in" do
-	extend SubdomainHelpers
+	extend Subscribm::TestingSupport::SubdomainHelpers
 	let!(:account) { FactoryGirl.create(:account) }
 	let(:sign_in_url) { "http://#{account.subdomain}.example.com/sign_in" }
 	let(:root_url) { "http://#{account.subdomain}.example.com/" }
